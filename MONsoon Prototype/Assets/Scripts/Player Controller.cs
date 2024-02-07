@@ -1,20 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //aspect of getting funky bellow
 public enum GravityMode { Rising, Falling, Top}
 public enum CustomForceMode { VelocityChange, Force, Impulse, Acceleration}
 public class PlayerController : MonoBehaviour
 {
+    public bool newJumpSettingsOpen;
+    public bool UseNewJump;
+    public float NewRisingGravity;
+    public float NewFallingGravity;
+    public float NewJumpStrength;
+    public float NewJumpMinTime;
+    public float NewJumpMaxTime;
+    public CustomForceMode NewForceMode = CustomForceMode.Impulse;
+
+
+
     public float MoveSpeed;
     public float SprintMultiplier;
     public float JumpForce;
     public CustomForceMode MyForceMode = CustomForceMode.Force;
     public Rigidbody rb;
-    GroundDetection gd;
+    public GroundDetection gd;
     public bool LockCursor;
 
+    public bool isJumping = false;
+
+    float dumbfuckingcount = .05f;
+    float dumbfuckingtimer = 0;
+    bool dumbfuckingcounting = false;
+
+    public bool jumpSettingsOpen;
+    public bool cameraSettingsOpen;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -44,14 +64,57 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Move();
-        JumpCheck();
-        if(UsingCustomGravity && gd.inAir)
+
+        if(UseNewJump)
+        {
+            NewJumpCheck();
+        }
+        else
+        {
+            JumpCheck();
+        }
+
+        if(UsingCustomGravity)
         {
             ApplyGravity();
         }
-        SetCam();
-        Debug.Log(rb.velocity.y);
+       SetCam();
+
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        //this was for like, tryna see how big the jumpy is
+        if(UsingTopArcGravity)
+        {
+            if (trackingRise > transform.position.y)
+            {
+                topMove = trackingRise;
+            }
+            trackingRise = transform.position.y;
+        }
+
+        if(dumbfuckingcounting)
+        {
+            dumbfuckingtimer += Time.deltaTime;
+            bool isbeingheld = Input.GetKey(KeyCode.Space);
+            Debug.Log(dumbfuckingtimer + isbeingheld.ToString());
+            if(dumbfuckingtimer >= dumbfuckingcount)
+            {
+                if(!Input.GetKey(KeyCode.Space) && isJumping)
+                {
+                    Debug.Log("this works");
+                    Physics.gravity = new Vector3(0, FallingGravity, 0);
+                    CurrentGravityMode = GravityMode.Falling;
+                    dumbfuckingtimer = 0;
+                    dumbfuckingcounting = false;
+                }
+            }
+        }
+
     }
+
+    public float topMove;
 
     void Move()
     {
@@ -95,15 +158,95 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(dir.x, rb.velocity.y, dir.z);
     }
 
+    float newJumpMaxTimer = 0;
+    float newJumpMinTimer = 0;
+    void NewJumpCheck()
+    {
+        if(Input.GetKey(KeyCode.Space))
+        {
+            if(isJumping)
+            {
+                if(newJumpMinTimer < NewJumpMinTime)
+                {
+                    newJumpMinTimer += Time.deltaTime;
+                }
+                else
+                {
+                    if ((rb.velocity.y > 0) && (newJumpMaxTimer < NewJumpMaxTime))
+                    {
+                        newJumpMaxTimer += Time.deltaTime;
+                    }
+                    //(rb.velocity.y < 0) || 
+                    else if ((newJumpMaxTimer > NewJumpMaxTime) && Physics.gravity.y != NewFallingGravity)
+                    {
+                        Physics.gravity = new Vector3(0, FallingGravity);
+                    }
+                }
+            }
+
+            else if(gd.IsGrounded())
+            {
+                switch (NewForceMode)
+                {
+                    case CustomForceMode.VelocityChange:
+                        rb.AddForce(new Vector3(rb.velocity.x, NewJumpStrength), ForceMode.VelocityChange);
+                        break;
+                    case CustomForceMode.Force:
+                        rb.AddForce(new Vector3(rb.velocity.x, NewJumpStrength), ForceMode.Force);
+                        break;
+                    case CustomForceMode.Impulse:
+                        rb.AddForce(new Vector3(rb.velocity.x, NewJumpStrength), ForceMode.Impulse);
+                        break;
+                    case CustomForceMode.Acceleration:
+                        rb.AddForce(new Vector3(rb.velocity.x, NewJumpStrength), ForceMode.Acceleration);
+                        break;
+                }
+                isJumping = true;
+
+            }
+        }
+        //ur jumping but not pressing the key anymore so now ur falling
+        else if(isJumping)
+        {
+            if(newJumpMinTimer < NewJumpMinTime)
+            {
+                newJumpMinTimer += Time.deltaTime;
+            }
+            else
+            {
+                Physics.gravity = new Vector3(0, (NewFallingGravity), 0);
+            }
+
+        }
+    }
+
+    public void HitGround()
+    {
+        isJumping = false;
+        newJumpMaxTimer = 0;
+        Physics.gravity = new Vector3(0, (NewRisingGravity), 0);
+    }
+
     void JumpCheck()
     {
         if(Input.GetKeyDown(KeyCode.Space) &&  gd.IsGrounded())
         {
+            
             Vector3 jump = new Vector3(0, JumpForce, 0);
-            switch(MyForceMode)
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+            //these were also for tryna find jump values
+           // Debug.Log("jumping pos x and y " + transform.position.x + " " + transform.position.z);
+            //Debug.Log("jumping starting y pos = " + transform.position.y);
+            CurrentGravityMode = GravityMode.Rising;
+            dumbfuckingcounting = true;
+
+            isJumping = true;
+
+            switch (MyForceMode)
             {
                 case CustomForceMode.VelocityChange:
-                    rb.AddForce(jump, ForceMode.VelocityChange);
+                    rb.AddForce(new Vector3(0, JumpForce), ForceMode.VelocityChange);
                     break;
                 case CustomForceMode.Force:
                     rb.AddForce(jump, ForceMode.Force);
@@ -114,74 +257,85 @@ public class PlayerController : MonoBehaviour
                 case CustomForceMode.Acceleration:
                     rb.AddForce(jump, ForceMode.Acceleration);
                     break;
-
             }
-            rb.AddForce(jump, ForceMode.VelocityChange);
-            //rb.AddForce(jump, ForceMode.Acceleration);
-            //rb.AddForce(jump, ForceMode.Force);
-            //rb.AddForce(jump, ForceMode.Impulse);
-            gd.inAir = true;
+
         }
     }
 
     public bool UsingCustomGravity;
-   // public float CustomGravity;
     public float RisingGravity;
     public float FallingGravity;
 
     public bool UsingTopArcGravity;
-    public float TopArc;
+    public float TopArcRising;
+    public float TopArcFalling;
     public float TopArcGravity;
-
-    // public float GravityScale;
-    // public float GlobalGravity = -9.81f;
 
     //ok im gna try and get funky here. sorry.
     public GravityMode CurrentGravityMode = GravityMode.Rising;
 
     public float trackingRise;
     public float trackingFalling;
+
+
     void ApplyGravity()
     {
-        switch (CurrentGravityMode)
+        if(!gd.IsGrounded())
         {
-            case GravityMode.Rising:
-                if (UsingTopArcGravity && (TopArc < rb.velocity.y))
-                {
-                    Physics.gravity = new Vector3(0, TopArcGravity, 0);
-                    CurrentGravityMode = GravityMode.Top;
-                    //trackingRise = rb.velocity.y - TopArc;
-                }
-                else
-                {
-                    if (rb.velocity.y < trackingRise)
+            switch (CurrentGravityMode)
+            {
+                case GravityMode.Rising:
+                    //Debug.Log("rising y velocity = " + rb.velocity.y);
+                    
+                    if (UsingTopArcGravity && (TopArcRising < rb.velocity.y))
+                    {
+                        bool xandyare0 = (rb.velocity.z == 0 && rb.velocity.x == 0);
+                        if (xandyare0)
+                        {
+                            Debug.Log("short jump");
+                            Physics.gravity = new Vector3(0, (TopArcGravity *3), 0);
+                            CurrentGravityMode = GravityMode.Top;
+                        }
+                        else 
+                        {
+                            Debug.Log("long jump");
+                            Physics.gravity = new Vector3(0, TopArcGravity, 0);
+                            CurrentGravityMode = GravityMode.Top;
+                        }
+
+                    }
+                    else if(!UsingTopArcGravity)
+                    {
+                        if (rb.velocity.y < trackingRise)
+                        {
+                            Physics.gravity = new Vector3(0, FallingGravity, 0);
+                            CurrentGravityMode = GravityMode.Falling;
+                        }
+                        trackingRise = rb.velocity.y;
+                    }
+                    break;
+                case GravityMode.Top:
+                    //Debug.Log("top arc y velocity = " + rb.velocity.y);
+                    if (rb.velocity.y < TopArcFalling)
                     {
                         Physics.gravity = new Vector3(0, FallingGravity, 0);
                         CurrentGravityMode = GravityMode.Falling;
+                        //rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     }
-                }
-                trackingRise = rb.velocity.y;
-                break;
-            case GravityMode.Top:
-                //trying to find a way to like, check reverse of arc
-                if (UsingTopArcGravity && (rb.velocity.y < -TopArc))
-                {
-                    Physics.gravity = new Vector3(0, FallingGravity, 0);
-                    CurrentGravityMode = GravityMode.Falling;
-                }
-                break;
-            case GravityMode.Falling:
-
-                if ((trackingFalling < 0) && (rb.velocity.y == 0))
-                {
-                    Physics.gravity = new Vector3(0, RisingGravity, 0);
-                    CurrentGravityMode = GravityMode.Rising;
-                }
-                else
-                {
-                    trackingFalling = rb.velocity.y;
-                }
-                break;
+                    break;
+                case GravityMode.Falling:
+                    //Debug.Log("falling velocity y = " + rb.velocity.y);
+                    if (rb.velocity.y == 0)
+                    {
+                        Physics.gravity = new Vector3(0, RisingGravity, 0);
+                        CurrentGravityMode = GravityMode.Rising;
+                    }
+                    else
+                    {
+                        trackingFalling = rb.velocity.y;
+                    }
+                    break;
+            }
         }
     }
 

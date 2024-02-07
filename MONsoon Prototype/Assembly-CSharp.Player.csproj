@@ -58,8 +58,14 @@
     <Analyzer Include="C:\Program Files\Unity 2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FallingPlatform.cs" />
+    <Compile Include="Assets\Scripts\JumpPad.cs" />
+    <Compile Include="Assets\Scripts\MovingPlatformHoldPlayer.cs" />
+    <Compile Include="Assets\Scripts\Moving Platform.cs" />
+    <Compile Include="Assets\Scripts\DisappearingPlatform.cs" />
     <Compile Include="Assets\Scripts\Player Controller.cs" />
     <Compile Include="Assets\Scripts\Ground Detection.cs" />
+    <Compile Include="Assets\Scripts\Teleportation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -634,29 +640,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Unity.Timeline.Player.csproj">
-      <Project>{AA38F7BE-30D7-140E-47A8-ADAC8D3293DE}</Project>
-      <Name>Unity.Timeline.Player</Name>
-    </ProjectReference>
-    <ProjectReference Include="UnityEngine.UI.Player.csproj">
-      <Project>{84BEAA28-7420-7258-C293-27066E6FF853}</Project>
-      <Name>UnityEngine.UI.Player</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.TextMeshPro.Player.csproj">
-      <Project>{10C9C904-E77A-614C-519D-7757C12E59F5}</Project>
-      <Name>Unity.TextMeshPro.Player</Name>
+    <ProjectReference Include="Unity.ProBuilder.Player.csproj">
+      <Project>{5D156979-55F9-9FBD-6A96-C5AE30299691}</Project>
+      <Name>Unity.ProBuilder.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Core.Player.csproj">
       <Project>{2C88B5BE-BA75-F5F7-CB0F-75AE84D3BB62}</Project>
       <Name>Unity.VisualScripting.Core.Player</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.VisualScripting.State.Player.csproj">
-      <Project>{1D84710C-3277-E5B7-D254-78D737EC2AA0}</Project>
-      <Name>Unity.VisualScripting.State.Player</Name>
+    <ProjectReference Include="UnityEngine.UI.Player.csproj">
+      <Project>{84BEAA28-7420-7258-C293-27066E6FF853}</Project>
+      <Name>UnityEngine.UI.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Flow.Player.csproj">
       <Project>{A16F487C-EFC9-422E-88E0-16677CE0C87A}</Project>
       <Name>Unity.VisualScripting.Flow.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.Player.csproj">
+      <Project>{AA38F7BE-30D7-140E-47A8-ADAC8D3293DE}</Project>
+      <Name>Unity.Timeline.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.TextMeshPro.Player.csproj">
+      <Project>{10C9C904-E77A-614C-519D-7757C12E59F5}</Project>
+      <Name>Unity.TextMeshPro.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VisualScripting.State.Player.csproj">
+      <Project>{1D84710C-3277-E5B7-D254-78D737EC2AA0}</Project>
+      <Name>Unity.VisualScripting.State.Player</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
