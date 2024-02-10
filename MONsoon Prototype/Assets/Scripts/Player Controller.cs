@@ -97,13 +97,13 @@ public class PlayerController : MonoBehaviour
         if(dumbfuckingcounting)
         {
             dumbfuckingtimer += Time.deltaTime;
-            bool isbeingheld = Input.GetKey(KeyCode.Space);
-            Debug.Log(dumbfuckingtimer + isbeingheld.ToString());
+            //bool isbeingheld = Input.GetKey(KeyCode.Space);
+           // Debug.Log(dumbfuckingtimer + isbeingheld.ToString());
             if(dumbfuckingtimer >= dumbfuckingcount)
             {
                 if(!Input.GetKey(KeyCode.Space) && isJumping)
                 {
-                    Debug.Log("this works");
+                    //Debug.Log("this works");
                     Physics.gravity = new Vector3(0, FallingGravity, 0);
                     CurrentGravityMode = GravityMode.Falling;
                     dumbfuckingtimer = 0;
@@ -292,13 +292,13 @@ public class PlayerController : MonoBehaviour
                         bool xandyare0 = (rb.velocity.z == 0 && rb.velocity.x == 0);
                         if (xandyare0)
                         {
-                            Debug.Log("short jump");
+                            //Debug.Log("short jump");
                             Physics.gravity = new Vector3(0, (TopArcGravity *3), 0);
                             CurrentGravityMode = GravityMode.Top;
                         }
                         else 
                         {
-                            Debug.Log("long jump");
+                            //Debug.Log("long jump");
                             Physics.gravity = new Vector3(0, TopArcGravity, 0);
                             CurrentGravityMode = GravityMode.Top;
                         }

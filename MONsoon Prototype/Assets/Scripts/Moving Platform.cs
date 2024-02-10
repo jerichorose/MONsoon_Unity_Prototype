@@ -37,6 +37,7 @@ public class MovingPlatform : MonoBehaviour
                 {
                     currentTargetStation++;
                 }
+                WaitTimer = 0;
             }
         }
     }

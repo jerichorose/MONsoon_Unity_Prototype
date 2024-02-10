@@ -14,6 +14,8 @@ public class GroundDetection : MonoBehaviour
     {
         pc = FindObjectOfType<PlayerController>();
     }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if ((!other.isTrigger) && (other.gameObject.layer == 6))
@@ -37,7 +39,6 @@ public class GroundDetection : MonoBehaviour
                 Physics.gravity = new Vector3(0, pc.RisingGravity, 0);
                 pc.CurrentGravityMode = GravityMode.Rising;
             }
-
             pc.isJumping = false;
         }
 

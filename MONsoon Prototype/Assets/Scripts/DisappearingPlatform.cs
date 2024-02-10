@@ -11,18 +11,25 @@ public class DisappearingPlatform : MonoBehaviour
     bool waitingForDissapear;
     bool waitingForReload;
 
-    float dissapearTimer;
-    float reloadTimer;
+    float dissapearTimer = 0;
+    float reloadTimer = 0;
+
 
     void Update()
     {
+        //Debug.Log("dissapeartimer = " + dissapearTimer + " and time to dissapear  = " + timeToDissapear);
         if (waitingForDissapear)
         {
+            float percentageOfFuck = dissapearTimer / timeToDissapear;
+            Debug.Log("percentageOfFuck = " + percentageOfFuck);
+            Color bColor = GetComponent<MeshRenderer>().material.color;
+            GetComponent<MeshRenderer>().material.color = new Color(bColor.r, bColor.g, bColor.b, Mathf.Lerp(1, 0, dissapearTimer / timeToDissapear));
+            Debug.Log(GetComponent<MeshRenderer>().material.color.a);
             dissapearTimer += Time.deltaTime;
+
             if(dissapearTimer >= timeToDissapear)
             {
                 GetComponent<BoxCollider>().enabled = false;
-                GetComponent<MeshRenderer>().enabled = false;
                 waitingForDissapear = false;
                 waitingForReload = true;
                 dissapearTimer = 0;
@@ -34,7 +41,8 @@ public class DisappearingPlatform : MonoBehaviour
             if(reloadTimer >= timeToReload)
             {
                 GetComponent<BoxCollider>().enabled = true;
-                GetComponent<MeshRenderer>().enabled = true;
+                Color bColor = GetComponent<MeshRenderer>().material.color;
+                GetComponent<MeshRenderer>().material.color = new Color(bColor.r, bColor.g, bColor.b, 1);
                 waitingForReload = false;
                 reloadTimer = 0;
             }
@@ -45,6 +53,7 @@ public class DisappearingPlatform : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player" && !waitingForDissapear)
         {
+
             waitingForDissapear = true;
         }
     }
