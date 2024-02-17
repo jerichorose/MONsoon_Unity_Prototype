@@ -36,7 +36,7 @@ Transform:
   - {fileID: 7139022946082346954}
   - {fileID: 2025931907925225137}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8971044310229180534
 MeshFilter:
@@ -150,6 +150,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 544d8cd2ca9634d4fa4a8c45f0b41522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  newJumpSettingsOpen: 0
+  UseNewJump: 0
+  NewRisingGravity: 0
+  NewFallingGravity: 0
+  NewJumpStrength: 0
+  NewJumpMinTime: 0
+  NewJumpMaxTime: 0
+  NewForceMode: 2
   MoveSpeed: 7
   SprintMultiplier: 2
   JumpForce: 15
@@ -158,6 +166,8 @@ MonoBehaviour:
   gd: {fileID: 0}
   LockCursor: 1
   isJumping: 0
+  jumpSettingsOpen: 0
+  cameraSettingsOpen: 0
   topMove: 0
   UsingCustomGravity: 1
   RisingGravity: -30
@@ -220,7 +230,7 @@ GameObject:
   - component: {fileID: 6190609412514083746}
   m_Layer: 0
   m_Name: GroundDetector
-  m_TagString: Untagged
+  m_TagString: GD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

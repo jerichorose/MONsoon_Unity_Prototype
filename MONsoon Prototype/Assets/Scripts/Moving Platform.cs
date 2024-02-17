@@ -8,7 +8,7 @@ public class MovingPlatform : MonoBehaviour
     public float MoveSpeed;
     public bool WaitAtStation;
     public float StationWaitTime;
-    int currentTargetStation;
+    public int currentTargetStation;
 
     float WaitTimer;
 
