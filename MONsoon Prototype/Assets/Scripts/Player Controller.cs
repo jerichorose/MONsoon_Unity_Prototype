@@ -350,7 +350,7 @@ public class PlayerController : MonoBehaviour
     [Header("Yaw, Horizontal Camera Movement")]
     [Tooltip("Yaw Sensitivity is how sensitive the camera response to horizontal mouse movement is. The minimum value is 100 and the maximum is 1000.")]
     [Range(100, 1000)]
-    public float YawSensitivity = 600f;
+    public float YawSensitivity = 400f;
 
     //Tracks the current Horizontal Angle
     float YawAngle = 0f;
@@ -358,7 +358,7 @@ public class PlayerController : MonoBehaviour
     [Header("Pitch, Vertical Camera Movement")]
     [Tooltip("Pitch Sensitivity is how sensitive the camera response to vertical mouse movement is. The minimum value is 100 and the maximum is 1000.")]
     [Range(100, 1000)]
-    public float PitchSensitivity = 600.0f;
+    public float PitchSensitivity = 300f;
 
     //Tracks the current Vertical Angle
     float PitchAngle = 0.0f;
